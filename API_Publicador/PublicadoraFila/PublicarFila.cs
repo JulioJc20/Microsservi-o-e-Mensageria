@@ -38,8 +38,5 @@ namespace API_Publicador.Publicadora
                                  body: body);
         }
 
-
-
-
     }
 }

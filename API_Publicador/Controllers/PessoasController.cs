@@ -6,6 +6,8 @@ using API_Publicador.Publicadora;
 using System.Text.Json;
 using API_Publicador.Services;
 using System.Net.Http;
+using System.Runtime.ConstrainedExecution;
+using API_Publicador.Model.Dto;
 
 namespace API_Publicador.Controllers
 {
@@ -34,30 +36,51 @@ namespace API_Publicador.Controllers
             return Ok(resultado);
         }
 
-        [HttpGet("Chamar_API_CEP")]
+        [HttpGet("Validar_CEP")]
         public async Task<IActionResult> ChamarApiCEP(string cep)
         {
-            var resultado = await _apiService.ChamarApiCep(cep);
+            var resposta = await _apiService.ChamarApiCep(cep);
 
-            if (resultado.StartsWith("Error"))
+            if (resposta.StartsWith("Error"))
             {
-                return StatusCode(500, resultado);
+                return StatusCode(500, resposta);
             }
-            return Ok(resultado);
+            return Ok(resposta);
         }
 
         [HttpPost("EnviarPessoas")] 
-        public Task<IActionResult> Criar([FromBody] Pessoa pessoa)
+        public async Task<IActionResult> Criar([FromBody] PessoaDto pessoa)
         {
+            var resposta = await _apiService.ChamarApiCep(pessoa.Endereco.Cep);
+            var retornoApi = JsonSerializer.Deserialize<EnderecoResponseDto>(resposta);
+
+            if (retornoApi == null)
+            {
+                return BadRequest("CEP inválido ou não encontrado");
+            }
+            var pessoaResposta = new
+            {
+
+                Nome = pessoa.Nome,
+                Cpf = pessoa.Cpf,
+                Rg = pessoa.Rg,
+                Sexo = pessoa.Sexo,
+                DataNascimento = pessoa.DataNascimento,
+                Email = pessoa.Email,
+                Telefone = pessoa.Telefone,
+                Endereco = retornoApi,
+            };
+
+
             var publicarFila = new PublicarFila();
-            var message = JsonSerializer.Serialize(pessoa);
+            var message = JsonSerializer.Serialize(pessoaResposta);
             publicarFila.PublicarMensagem("pessoa", message);
 
-            return Task.FromResult<IActionResult>(Ok("Pessoa publicada na fila com sucesso"));
+            return Ok("Pessoa publicada na fila com sucesso");
         }
 
         [HttpDelete("DeletarPessoas")]
-        public Task<IActionResult> Deletar([FromBody] Pessoa pessoa )
+        public Task<IActionResult> Deletar([FromBody] DeletarPessoaDto pessoa )
         {
             var deletarFila = new DeletarFila();
             var message = JsonSerializer.Serialize(pessoa);
