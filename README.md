@@ -3,10 +3,15 @@
 🛠️ Tecnologias Utilizadas
 
 .NET 6 - Framework principal da aplicação
+
 Dapper - ORM para facilitar a comunicação com o banco de dados
+
 SQL Server - Banco de dados relacional
+
 RabbitMQ - Mensageria para comunicação entre as APIs
+
 HttpClient - Para consumo de APIs externas
+
 ViaCEP - API externa para consulta de CEP
 
 📖 Descrição
