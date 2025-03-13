@@ -24,7 +24,7 @@ namespace API_Publicador.Controllers
 
 
         [HttpGet("Chamar_APIConsumidora/{nome}")]
-        public async Task<IActionResult> ChamarApi(string nome)
+        public async Task<IActionResult> ChamarApiConsumidora(string nome)
         {
             var resultado = await _apiService.ChamarApiConsumidora(nome);
 
@@ -49,7 +49,7 @@ namespace API_Publicador.Controllers
         }
 
         [HttpPost("EnviarPessoas")] 
-        public async Task<IActionResult> Criar([FromBody] PessoaDto pessoa)
+        public async Task<IActionResult> Criar([FromBody] PessoaDto pessoa) 
         {
             var resposta = await _apiService.ChamarApiCep(pessoa.Endereco.Cep);
             var retornoApi = JsonSerializer.Deserialize<EnderecoResponseDto>(resposta);
@@ -74,7 +74,7 @@ namespace API_Publicador.Controllers
 
             var publicarFila = new PublicarFila();
             var message = JsonSerializer.Serialize(pessoaResposta);
-            publicarFila.PublicarMensagem("pessoa", message);
+            publicarFila.PublicarMensagem("Criar", message);
 
             return Ok("Pessoa publicada na fila com sucesso");
         }
@@ -84,18 +84,18 @@ namespace API_Publicador.Controllers
         {
             var deletarFila = new DeletarFila();
             var message = JsonSerializer.Serialize(pessoa);
-            deletarFila.DeletarMensagem("deletarPessoa", message);
             
-         
+            deletarFila.DeletarMensagem("Deletar", message);
+            
              return Task.FromResult<IActionResult>(Ok("Pessoa deletada da fila com sucesso"));
            
         }
         [HttpPut("AtualizarPessoas")]
-        public Task<IActionResult> Atualizar([FromBody]Pessoa pessoa)
+        public Task<IActionResult> Atualizar([FromBody]Pessoa pessoa) 
         {
             var atualizarFila = new AtualizarFila();
             var message = JsonSerializer.Serialize(pessoa);
-            atualizarFila.AtualizarMensagem("atualizarPessoa", message);
+            atualizarFila.AtualizarMensagem("Atualizar", message);
 
             return Task.FromResult<IActionResult>(Ok("Pessoa atualizada na fila com sucesso"));
         }
