@@ -27,7 +27,7 @@ namespace API_Consumidor.Consumidor
         {
 
 
-            _channel.QueueDeclare("deletarPessoa",
+            _channel.QueueDeclare("Deletar",
                                   durable: false,
                                   exclusive: false,
                                   autoDelete: true,
@@ -47,7 +47,7 @@ namespace API_Consumidor.Consumidor
                 }
             };
 
-            _channel.BasicConsume("deletarPessoa",
+            _channel.BasicConsume("Deletar",
                                    autoAck: true,
                                    consumer: consumer);
 

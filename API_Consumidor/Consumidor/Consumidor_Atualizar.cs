@@ -25,7 +25,7 @@ namespace API_Consumidor.Consumidor
         public void Consumir_Atualizar()
          {
            
-            _channel.QueueDeclare("atualizarPessoa",
+            _channel.QueueDeclare("Atualizar",
                                   durable: false,
                                   exclusive: false,
                                   autoDelete: true,
@@ -45,7 +45,7 @@ namespace API_Consumidor.Consumidor
                 }
             };
 
-            _channel.BasicConsume("atualizarPessoa",
+            _channel.BasicConsume("Atualizar",
                                    autoAck: true,
                                    consumer : consumer);
 

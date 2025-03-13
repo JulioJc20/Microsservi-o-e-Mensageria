@@ -29,7 +29,7 @@ namespace API_Consumidor.Consumidor
         public void Consumir_Publicar()
         {
 
-            _channel.QueueDeclare("pessoa",
+            _channel.QueueDeclare("Criar",
                                   durable: false,
                                   exclusive: false,
                                   autoDelete: true,
@@ -64,7 +64,7 @@ namespace API_Consumidor.Consumidor
                 }
             };
 
-            _channel.BasicConsume("pessoa",
+            _channel.BasicConsume("Criar",
                                    autoAck: true,
                                    consumer: consumer);
 
